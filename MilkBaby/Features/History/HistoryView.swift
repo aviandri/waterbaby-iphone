@@ -33,6 +33,7 @@ struct HistoryView: View {
                 .padding(.horizontal, 12)
 
                 DayLogView(day: selectedDay)
+                    .padding(.horizontal, 20)
             }
             .padding(.bottom, 32)
         }
