@@ -112,6 +112,21 @@ final class TapThroughTests: XCTestCase {
         tapButton("Settings", step: "home → settings")
         waitFor(app.switches["Feed reminders"], step: "settings")
         snapshot("settings")
+        tapButton("Close", step: "settings")
+        waitForHomeWithFeeds(step: "home after settings")
+
+        // MARK: Goal reached
+        // 330ml is logged so far against Mia's 750ml goal (5.0 kg newborn); 450ml more crosses it.
+        tapButton("Log Formula", step: "home carousel → formula (goal)")
+        waitFor(button("+ Formula"), step: "add feed sheet (goal)")
+        tapButton("Custom amount", step: "add feed sheet (goal)")
+        waitFor(button("Delete"), step: "custom amount keypad (goal)")
+        for digit in ["4", "5", "0"] { tapButton(digit, step: "custom amount keypad (goal)") }
+        tapButton("customAmountAddButton", step: "custom amount keypad (goal)")
+        let celebration = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "label CONTAINS %@", "Goal reached")).firstMatch
+        waitFor(celebration, step: "goal reached celebration")
+        snapshot("goal-reached", settleFor: 1.5)
     }
 
     // MARK: - Steps
