@@ -45,6 +45,7 @@ struct CustomAmountSheet: View {
             .buttonStyle(PillButtonStyle(background: type.color, foreground: Theme.ink))
             .disabled(value <= 0)
             .opacity(value > 0 ? 1 : 0.5)
+            .accessibilityIdentifier("customAmountAddButton")
             .padding(.top, 24)
             .padding(.bottom, 24)
 

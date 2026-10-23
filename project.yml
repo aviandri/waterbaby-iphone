@@ -25,6 +25,10 @@ targets:
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
         INFOPLIST_KEY_UIUserInterfaceStyle: Light
+    scheme:
+      testTargets:
+        - MilkBabyTests
+        - MilkBabyUITests
   MilkBabyTests:
     type: bundle.unit-test
     platform: iOS
@@ -35,3 +39,14 @@ targets:
       base:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: com.aviandri.milkbaby.tests
+  MilkBabyUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [MilkBabyUITests]
+    dependencies:
+      - target: MilkBaby
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.aviandri.milkbaby.uitests
+        TEST_TARGET_NAME: MilkBaby

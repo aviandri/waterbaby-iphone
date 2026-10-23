@@ -19,7 +19,8 @@ struct RootView: View {
             }
         }
         .task {
-            try? await Task.sleep(for: .seconds(1.2))
+            // Held longer under UI tests so the tap-through can screenshot the splash reliably.
+            try? await Task.sleep(for: .seconds(MilkBabyApp.isUITesting ? 3 : 1.2))
             withAnimation(.easeOut(duration: 0.3)) { showSplash = false }
         }
     }
