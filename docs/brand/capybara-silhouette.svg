@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 125 100" width="625" height="500">
+  <!-- Mirrors CapybaraSilhouette.swift. Commands: absolute M/L/C/Q/Z only (parsed by SVGPath.swift). -->
+  <path fill="#B07D54" d="M 12 60 C 5 42 14 24 36 20 C 52 17 66 18 73 20 C 76 19 78 17.5 80 16 C 80 10 85 7 88.5 9.5 C 91 11.5 91 14.5 89.5 16.5 C 98 16 109 17 115 21 C 121 25 123 34 121 40 C 119 45 115 48 109 49 C 104 50 101 53 98 56 C 95 58 92 59 90 60 C 89 65 90 70 89 76 L 90 91 C 90 94 88 96 85 96 L 79 96 C 76 96 75 94 76 91 L 76 80 C 66 83 54 83 46 80 L 44 92 C 44 95 42 96 39 96 L 27 96 C 24 96 23 94 24 91 C 17 86 12 76 12 60 Z"/>
+</svg>
