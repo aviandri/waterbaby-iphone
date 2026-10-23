@@ -33,7 +33,7 @@ enum MilkType: String, Codable, CaseIterable, Identifiable {
         case .breastMilk: "heart.fill"
         case .pumpedMilk: "drop.fill"
         case .formula: "takeoutbag.and.cup.and.straw.fill"
-        case .wholeMilk: "carton.fill"
+        case .wholeMilk: "mug.fill"
         }
     }
 
