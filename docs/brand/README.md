@@ -23,17 +23,18 @@ The approved originals, made with Higgsfield, are in `source/`:
 | `CapybaraLogo` image set | Icon render masked to a circle, 600² | `CapybaraLogo` | Splash |
 | `AppIcon.png` (1024², RGB, no alpha) | Icon render, downscaled | — | Home screen |
 | `MilkBaby/Resources/goal-reached.mp4` | `goal-reached.mp4` with the grey background levelled to pure white, no audio track | `GoalReachedView`, `GoalReachedOverlay` | Celebration when the daily goal is first reached |
-| `capybara-silhouette.svg` | Hand-placed over `capybara-v2.png`, mirrored (`tools/silhouette_half.py`) | `CapybaraSilhouette`, `MascotFillView` | Home fill meter |
+| `capybara-silhouette.svg` | Traced over `capybara-v2.png` (yuzu left out), mirrored (`tools/silhouette_half.py`) | `CapybaraSilhouette`, `MascotFillView` | Home fill meter |
 
 ![fill meter](fill-preview.png)
 
 ### Silhouette
 
-The silhouette is the character from the front: yuzu bump, round head, tiny round ears, chubby
-pear-shaped body and two short legs. It is drawn in a 62×100 view box, so
-`CapybaraSilhouette.aspect` is 0.62. Always size it with that constant, not a literal.
-`MascotFillView` maps 0–100% from the soles to the top of the yuzu
-(`CapybaraSilhouette.verticalExtent`).
+The silhouette is the character from the front, ears to soles: a domed head with two small,
+separate round ears, round cheeks, a slight waist, a chubby belly that bulges at the sides, and two
+short legs with a gap between them. The yuzu is left out so the head reads cleanly at low fill
+levels. It is drawn in a 68×100 view box, which matches the art (459 px wide by 677 px from ear tip
+to sole), so `CapybaraSilhouette.aspect` is 0.68. Always size it with that constant, not a literal.
+`MascotFillView` maps 0–100% from the soles to the ear tips (`CapybaraSilhouette.verticalExtent`).
 
 To change the shape, edit the right-half points in `tools/silhouette_half.py`, then paste its
 output into both `capybara-silhouette.svg` and `CapybaraSilhouette.swift`. The Swift `SVGPath`
