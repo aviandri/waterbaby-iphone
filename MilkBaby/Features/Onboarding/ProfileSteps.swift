@@ -28,6 +28,7 @@ struct NameStep: View {
                 .autocorrectionDisabled()
                 .submitLabel(.next)
                 .focused($focused)
+                .accessibilityIdentifier("babyNameField")
                 .onSubmit { if !trimmed.isEmpty { onContinue() } }
                 .padding(.vertical, 12)
                 .overlay(alignment: .bottom) {
@@ -95,7 +96,7 @@ struct WeightStep: View {
                 .frame(width: 140)
 
                 HStack(spacing: 28) {
-                    stepButton("minus") { displayed.wrappedValue -= 0.1 }
+                    stepButton("minus", label: "Decrease weight") { displayed.wrappedValue -= 0.1 }
                     Text(String(format: "%.1f", displayed.wrappedValue))
                         .font(Theme.rounded(56))
                         .foregroundStyle(Theme.ink)
@@ -108,7 +109,7 @@ struct WeightStep: View {
                                 .foregroundStyle(Theme.subtle)
                                 .offset(y: 20)
                         }
-                    stepButton("plus") { displayed.wrappedValue += 0.1 }
+                    stepButton("plus", label: "Increase weight") { displayed.wrappedValue += 0.1 }
                 }
 
                 Slider(
@@ -124,7 +125,7 @@ struct WeightStep: View {
         }
     }
 
-    private func stepButton(_ symbol: String, action: @escaping () -> Void) -> some View {
+    private func stepButton(_ symbol: String, label: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: symbol)
                 .font(.system(size: 18, weight: .heavy))
@@ -133,6 +134,7 @@ struct WeightStep: View {
                 .background(Theme.accent.opacity(0.15), in: Circle())
         }
         .buttonRepeatBehavior(.enabled)
+        .accessibilityLabel(label)
     }
 }
 
