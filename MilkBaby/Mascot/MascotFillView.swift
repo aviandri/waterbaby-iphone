@@ -52,7 +52,7 @@ struct MascotFillView: View {
     }
 }
 
-/// Everything below a gently waving line at `level` (0 = feet, 1 = ear tip) of the capybara.
+/// Everything below a gently waving line at `level` (0 = soles, 1 = ear tips) of the capybara.
 private struct FillBand: Shape {
     var level: Double
     var phase: Double
@@ -67,7 +67,7 @@ private struct FillBand: Shape {
         let amplitude = rect.height * 0.012
         let extent = CapybaraSilhouette.verticalExtent
         let bottom = rect.minY + rect.height * extent.upperBound
-        // At 100% the wave troughs sit above the ear tip, so a full capybara has no gap at the top.
+        // At 100% the wave troughs sit above the ears, so a full capybara has no gap at the top.
         let top = rect.minY + rect.height * extent.lowerBound - amplitude
         let surface = bottom - (bottom - top) * level
         let steps = 32

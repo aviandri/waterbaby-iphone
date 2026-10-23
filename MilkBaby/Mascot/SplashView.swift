@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Full-screen white splash: the centred capybara mark pops in, with a two-tone footer line
+/// Full-screen white splash: the centred capybara badge pops in, with a two-tone footer line
 /// like Waterllama's "Made with love in Ukraine".
 struct SplashView: View {
     @State private var appeared = false
@@ -9,7 +9,8 @@ struct SplashView: View {
         ZStack {
             Color.white.ignoresSafeArea()
             CapybaraLogo()
-                .frame(width: 96, height: 96)
+                .frame(width: 128, height: 128)
+                .shadow(color: Theme.capybaraDark.opacity(0.12), radius: 12, y: 4)
                 .scaleEffect(appeared ? 1 : 0.8)
                 .opacity(appeared ? 1 : 0)
             VStack(spacing: 2) {
