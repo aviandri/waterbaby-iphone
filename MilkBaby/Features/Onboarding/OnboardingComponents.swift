@@ -126,7 +126,7 @@ struct OnboardingChoiceSheet: View {
                 .padding(.top, 40)
             CapybaraSilhouette()
                 .fill(Theme.silhouetteEmpty)
-                .aspectRatio(1.25, contentMode: .fit)
+                .aspectRatio(CapybaraSilhouette.aspect, contentMode: .fit)
                 .padding(.horizontal, 32)
             Spacer()
         }

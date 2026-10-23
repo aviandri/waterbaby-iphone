@@ -66,12 +66,16 @@ struct HomeView: View {
         .background(Color.white.ignoresSafeArea())
         .overlay {
             if let confettiID {
-                ConfettiView()
-                    .id(confettiID)
-                    .task(id: confettiID) {
-                        try? await Task.sleep(for: .seconds(ConfettiView.duration))
-                        if self.confettiID == confettiID { self.confettiID = nil }
+                ZStack {
+                    GoalReachedOverlay {
+                        withAnimation(.easeOut(duration: 0.25)) {
+                            if self.confettiID == confettiID { self.confettiID = nil }
+                        }
                     }
+                    ConfettiView()
+                }
+                .id(confettiID)
+                .transition(.opacity)
             }
         }
         .sheet(item: $addingType) { type in
