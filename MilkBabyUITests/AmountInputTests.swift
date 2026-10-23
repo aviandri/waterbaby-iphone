@@ -61,6 +61,12 @@ final class AmountInputTests: XCTestCase {
     // MARK: - Helpers
 
     private func openAddFormula() {
+        // The splash sits on top of the already-built home screen for 3 s under -uiTesting, and
+        // XCUITest reports the buttons beneath it as hittable, so a tap before it fades is lost.
+        let splash = app.staticTexts["Made with love"]
+        if splash.waitForExistence(timeout: 3) {
+            XCTAssertTrue(wait(timeout: 10) { !splash.exists }, "splash never went away")
+        }
         let logFormula = app.buttons["Log Formula"]
         XCTAssertTrue(logFormula.waitForExistence(timeout: 10), "home carousel not shown")
         XCTAssertTrue(wait(timeout: 5) { logFormula.isHittable }, "home carousel never became tappable")
