@@ -31,7 +31,7 @@ final class TapThroughTests: XCTestCase {
         waitForDisappearance(of: splash, step: "splash fades out")
 
         // MARK: Onboarding
-        waitFor(app.buttons["Get started"], step: "welcome")
+        waitFor(button("Get started"), step: "welcome")
         snapshot("welcome")
         tapButton("Get started", step: "welcome")
 
@@ -68,12 +68,12 @@ final class TapThroughTests: XCTestCase {
         tapButton("Skip", step: "reminders") // Skipping avoids the system permission alert.
 
         // MARK: Home and logging
-        waitFor(app.buttons["Settings"], step: "home (empty)")
+        waitFor(button("Settings"), step: "home (empty)")
         waitFor(app.staticTexts["Log the first feed"], step: "home (empty)")
         snapshot("home-empty")
 
         tapButton("Log Formula", step: "home carousel → formula")
-        waitFor(app.buttons["+ Formula"], step: "add feed sheet (formula)")
+        waitFor(button("+ Formula"), step: "add feed sheet (formula)")
         snapshot("add-feed-formula")
         tapButton("+ Formula", step: "add feed sheet (formula)")
         waitForHomeWithFeeds(step: "home after formula")
@@ -82,9 +82,9 @@ final class TapThroughTests: XCTestCase {
         logFeedAtDefaultAmount("Breast Milk")
 
         tapButton("Log Pumped Milk", step: "home carousel → pumped milk")
-        waitFor(app.buttons["+ Pumped Milk"], step: "add feed sheet (pumped milk)")
+        waitFor(button("+ Pumped Milk"), step: "add feed sheet (pumped milk)")
         tapButton("Custom amount", step: "add feed sheet (pumped milk)")
-        waitFor(app.buttons["Delete"], step: "custom amount keypad")
+        waitFor(button("Delete"), step: "custom amount keypad")
         tapButton("9", step: "custom amount keypad")
         tapButton("0", step: "custom amount keypad")
         snapshot("custom-amount-keypad")
@@ -95,7 +95,7 @@ final class TapThroughTests: XCTestCase {
         // MARK: Day log
         let mascot = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Today's feeds")).firstMatch
         tap(mascot, step: "home → day log")
-        waitFor(app.buttons["Add missed feed"], step: "day log")
+        waitFor(button("Add missed feed"), step: "day log")
         snapshot("day-log")
         tapButton("Close", step: "day log")
         waitForHomeWithFeeds(step: "home after day log")
@@ -103,7 +103,7 @@ final class TapThroughTests: XCTestCase {
         // MARK: History
         let streakBadge = app.buttons.matching(NSPredicate(format: "label ENDSWITH %@", "day streak")).firstMatch
         tap(streakBadge, step: "home → history")
-        waitFor(app.buttons["Previous month"], step: "history")
+        waitFor(button("Previous month"), step: "history")
         snapshot("history")
         tapButton("Close", step: "history")
         waitForHomeWithFeeds(step: "home after history")
@@ -118,7 +118,7 @@ final class TapThroughTests: XCTestCase {
 
     private func logFeedAtDefaultAmount(_ typeName: String) {
         tapButton("Log \(typeName)", step: "home carousel → \(typeName)")
-        waitFor(app.buttons["+ \(typeName)"], step: "add feed sheet (\(typeName))")
+        waitFor(button("+ \(typeName)"), step: "add feed sheet (\(typeName))")
         tapButton("+ \(typeName)", step: "add feed sheet (\(typeName))")
         waitForHomeWithFeeds(step: "home after \(typeName)")
     }
@@ -127,7 +127,7 @@ final class TapThroughTests: XCTestCase {
     private func waitForHomeWithFeeds(step: String) {
         let summary = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Milk today")).firstMatch
         waitFor(summary, step: step)
-        let settingsButton = app.buttons["Settings"]
+        let settingsButton = button("Settings")
         waitFor(settingsButton, step: step)
         if !wait(timeout: 5, until: { settingsButton.isHittable }) {
             XCTFail("[\(step)] home never became tappable (is a sheet still open?)")
@@ -136,9 +136,19 @@ final class TapThroughTests: XCTestCase {
 
     // MARK: - Helpers
 
+    /// Buttons whose accessibility identifier is `label`, or whose label equals it ignoring case.
+    /// Case-insensitive because `PillButtonStyle` uppercases its text, which can change the label.
+    private func buttons(_ label: String) -> XCUIElementQuery {
+        app.buttons.matching(NSPredicate(format: "identifier == %@ OR label ==[c] %@", label, label))
+    }
+
+    private func button(_ label: String) -> XCUIElement {
+        buttons(label).firstMatch
+    }
+
     /// Taps the button whose accessibility label or identifier is `label`.
     private func tapButton(_ label: String, step: String, file: StaticString = #filePath, line: UInt = #line) {
-        let matches = app.buttons.matching(identifier: label)
+        let matches = buttons(label)
         guard waitFor(matches.firstMatch, step: step, file: file, line: line) else { return }
         // While a page slides out, its copy of the button (e.g. "Continue") can linger for a moment.
         _ = wait(timeout: 3, until: { matches.count == 1 })
@@ -164,6 +174,17 @@ final class TapThroughTests: XCTestCase {
         line: UInt = #line
     ) -> Bool {
         if element.waitForExistence(timeout: timeout) { return true }
+        // Attach the accessibility tree so a failed lookup shows what was actually on screen.
+        let tree = XCTAttachment(string: app.debugDescription)
+        tree.name = "accessibility-tree-\(step)"
+        tree.lifetime = .keepAlways
+        add(tree)
+        if let dir = ProcessInfo.processInfo.environment["SCREENSHOT_DIR"], !dir.isEmpty {
+            try? app.debugDescription.write(
+                toFile: (dir as NSString).appendingPathComponent("FAILED-accessibility-tree.txt"),
+                atomically: true, encoding: .utf8
+            )
+        }
         XCTFail("[\(step)] timed out after \(Int(timeout))s waiting for \(element)", file: file, line: line)
         return false
     }
