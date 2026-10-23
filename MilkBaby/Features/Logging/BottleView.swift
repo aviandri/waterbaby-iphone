@@ -125,13 +125,43 @@ struct MilkFillShape: Shape {
 /// Flat pastel baby bottle in the v2 capybara style that fills from the bottom to `fraction`.
 /// Pass `capacityML` (what a full bottle holds) to get labelled measuring marks in `unit`;
 /// without it the marks are unlabelled.
+///
+/// Pass `selection` and `steps` (plus `capacityML`) to make it interactive: dragging up or down
+/// changes the amount by the distance dragged, snapped to the nearest step, and VoiceOver can
+/// adjust it as an element identified as "bottle".
 struct BottleView: View {
     var fraction: Double
     var color: Color
-    var capacityML: Double? = nil
-    var unit: VolumeUnit = .ml
+    var capacityML: Double?
+    var unit: VolumeUnit
+    var selection: Binding<Double>?
+    var steps: [Double]
+
+    /// The amount when the current drag began; the drag moves relative to it, so a touch or a tiny
+    /// drag never jumps the value to wherever the finger landed.
+    @State private var dragStartML: Double?
 
     private let lineWidth: CGFloat = 2.5
+
+    init(
+        fraction: Double,
+        color: Color,
+        capacityML: Double? = nil,
+        unit: VolumeUnit = .ml,
+        selection: Binding<Double>? = nil,
+        steps: [Double] = []
+    ) {
+        self.fraction = fraction
+        self.color = color
+        self.capacityML = capacityML
+        self.unit = unit
+        self.selection = selection
+        self.steps = steps.sorted()
+    }
+
+    private var isInteractive: Bool {
+        selection != nil && !steps.isEmpty && (capacityML ?? 0) > 0
+    }
 
     var body: some View {
         ZStack {
@@ -154,8 +184,53 @@ struct BottleView: View {
         }
         .padding(lineWidth / 2)
         .aspectRatio(Bottle.aspectRatio, contentMode: .fit)
+        .overlay {
+            GeometryReader { geo in
+                Color.clear
+                    .contentShape(Rectangle())
+                    .gesture(dragGesture(height: geo.size.height))
+            }
+            .allowsHitTesting(isInteractive)
+        }
         .animation(.spring(response: 0.45, dampingFraction: 0.75), value: fraction)
-        .accessibilityHidden(true)
+        .accessibilityElement(children: .ignore)
+        .accessibilityHidden(!isInteractive)
+        .accessibilityLabel("Bottle")
+        .accessibilityValue(selection.map { unit.format($0.wrappedValue) } ?? "")
+        .accessibilityHint("Swipe up or down to change the amount")
+        .accessibilityIdentifier("bottle")
+        .accessibilityAdjustableAction { direction in
+            switch direction {
+            case .increment: step(by: 1)
+            case .decrement: step(by: -1)
+            @unknown default: break
+            }
+        }
+    }
+
+    /// Vertical drag: moving the full height of the fill area spans the whole capacity.
+    private func dragGesture(height: CGFloat) -> some Gesture {
+        DragGesture(minimumDistance: 4)
+            .onChanged { value in
+                guard let selection, let capacityML, capacityML > 0, height > 0 else { return }
+                let start = dragStartML ?? selection.wrappedValue
+                if dragStartML == nil { dragStartML = start }
+                let fillableHeight = height * (1 - Bottle.fillTop)
+                let ml = start - value.translation.height / fillableHeight * capacityML
+                guard let nearest = steps.min(by: { abs($0 - ml) < abs($1 - ml) }) else { return }
+                if nearest != selection.wrappedValue { selection.wrappedValue = nearest }
+            }
+            .onEnded { _ in dragStartML = nil }
+    }
+
+    /// Moves the selection to the next or previous step (VoiceOver swipe up/down).
+    private func step(by offset: Int) {
+        guard let selection, !steps.isEmpty else { return }
+        let current = selection.wrappedValue
+        let index = offset > 0
+            ? steps.firstIndex(where: { $0 > current })
+            : steps.lastIndex(where: { $0 < current })
+        if let index { selection.wrappedValue = steps[index] }
     }
 
     private var outlineStyle: StrokeStyle {
@@ -222,6 +297,30 @@ struct BottleView: View {
         }
     }
     .padding(20)
+}
+
+private struct DraggableBottlePreview: View {
+    @State private var selected: Double = 120
+    private let steps: [Double] = MilkType.formula.presetsML
+
+    var body: some View {
+        VStack(spacing: 16) {
+            BottleView(
+                fraction: selected / 300,
+                color: Theme.milkButter,
+                capacityML: 300,
+                selection: $selected,
+                steps: steps
+            )
+            .frame(maxHeight: 380)
+            AmountPicker(amountsML: steps, selectedML: $selected, unit: .ml)
+        }
+        .padding(.vertical, 40)
+    }
+}
+
+#Preview("Drag to fill") {
+    DraggableBottlePreview()
 }
 
 #Preview("Large, oz") {

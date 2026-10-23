@@ -13,17 +13,18 @@ struct AddFeedSheet: View {
     @Environment(AppSettings.self) private var settings
 
     @State private var selectedML: Double
+    /// Presets plus the remembered amount. Fixed while the sheet is open: if a remembered custom
+    /// amount dropped out of the list mid-scroll, every later item would shift under the centre.
+    @State private var amounts: [Double]
     @State private var showCustomAmount = false
 
     init(type: MilkType, date: Date? = nil) {
         self.type = type
         self.date = date
         let remembered = UserDefaults.standard.double(forKey: Self.lastAmountKey(type))
-        self._selectedML = State(initialValue: remembered > 0 ? remembered : type.defaultAmountML)
-    }
-
-    private var amounts: [Double] {
-        Set(type.presetsML + [selectedML]).sorted()
+        let initial = remembered > 0 ? remembered : type.defaultAmountML
+        self._selectedML = State(initialValue: initial)
+        self._amounts = State(initialValue: Set(type.presetsML + [initial]).sorted())
     }
 
     /// The bottle holds a bit more than the largest preset, so presets never look "full".
@@ -46,7 +47,9 @@ struct AddFeedSheet: View {
                 fraction: selectedML / bottleCapacityML,
                 color: type.color,
                 capacityML: bottleCapacityML,
-                unit: settings.unit
+                unit: settings.unit,
+                selection: $selectedML,
+                steps: amounts
             )
                 .frame(maxHeight: 380)
                 .padding(.horizontal, 64)
@@ -87,6 +90,9 @@ struct AddFeedSheet: View {
             .padding(.bottom, 16)
         }
         .background(Color.white.ignoresSafeArea())
+        // Dragging down on the bottle lowers the amount; it must not pull the sheet down too.
+        // The close button still dismisses.
+        .interactiveDismissDisabled()
         .sheet(isPresented: $showCustomAmount) {
             CustomAmountSheet(type: type, unit: settings.unit) { ml in
                 showCustomAmount = false
