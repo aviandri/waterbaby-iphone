@@ -42,7 +42,12 @@ struct AddFeedSheet: View {
 
             Spacer(minLength: 12)
 
-            BottleView(fraction: selectedML / bottleCapacityML, color: type.color)
+            BottleView(
+                fraction: selectedML / bottleCapacityML,
+                color: type.color,
+                capacityML: bottleCapacityML,
+                unit: settings.unit
+            )
                 .frame(maxHeight: 380)
                 .padding(.horizontal, 64)
 

@@ -10,6 +10,8 @@ enum Theme {
     static let subtle = Color(red: 0.62, green: 0.64, blue: 0.68)          // grey captions
     static let silhouetteEmpty = Color(red: 0.94, green: 0.94, blue: 0.95) // #EFEFF2 unfilled mascot
     static let danger = Color(red: 0.93, green: 0.36, blue: 0.45)
+    static let outline = Color(red: 0.58, green: 0.39, blue: 0.30)        // #94634D, thin v2-art outlines
+    static let bottlePink = Color(red: 0.97, green: 0.73, blue: 0.79)     // #F8BAC9, baby bottle cap
 
     // Milk types
     static let milkCream = Color(red: 0.99, green: 0.89, blue: 0.72)       // #FDE3B8
