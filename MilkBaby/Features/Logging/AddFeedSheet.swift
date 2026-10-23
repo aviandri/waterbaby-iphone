@@ -94,6 +94,11 @@ struct AddFeedSheet: View {
         guard ml > 0 else { return }
         modelContext.insert(FeedEntry(date: date ?? .now, amountML: ml, type: type))
         UserDefaults.standard.set(ml, forKey: Self.lastAmountKey(type))
+        // Restart the repeating reminder so it fires N hours after this feed (only for feeds logged now).
+        if date == nil {
+            let settings = settings
+            Task { await ReminderScheduler.sync(with: settings) }
+        }
         FeedHaptics.success()
         dismiss()
     }
