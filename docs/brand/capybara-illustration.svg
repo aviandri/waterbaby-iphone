@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="400" height="480">
+  <!-- Mirrors CapybaraIllustration.swift (onboarding welcome art). -->
+<ellipse cx="100" cy="233" rx="72" ry="6" fill="#293445" opacity="0.06"/>
+<path fill="#B07D54" d="M 100 96 C 150 96 172 144 170 186 C 168 218 140 231 100 231 C 60 231 32 218 30 186 C 28 144 50 96 100 96 Z"/>
+<ellipse cx="100" cy="190" rx="44" ry="38" fill="#D9AE85"/>
+<ellipse cx="64" cy="227" rx="22" ry="9" fill="#6B472E"/>
+<ellipse cx="136" cy="227" rx="22" ry="9" fill="#6B472E"/>
+<g transform="rotate(-12 100 180)">
+  <path fill="#F59E73" d="M 93 144 C 93 136 96 130 100 130 C 104 130 107 136 107 144 Z"/>
+  <rect x="87" y="142" width="26" height="11" rx="4" fill="#94CFED"/>
+  <rect x="83" y="151" width="34" height="62" rx="12" fill="#FFFFFF" stroke="#E3E6EC" stroke-width="2"/>
+  <path fill="#FDE3B8" d="M 85 172 C 94 168 106 176 115 172 L 115 201 C 115 207 111 211 105 211 L 95 211 C 89 211 85 207 85 201 Z"/>
+  <rect x="103" y="160" width="8" height="2.5" rx="1.25" fill="#94CFED"/>
+  <rect x="103" y="169" width="8" height="2.5" rx="1.25" fill="#94CFED"/>
+  <rect x="103" y="178" width="8" height="2.5" rx="1.25" fill="#94CFED"/>
+</g>
+<ellipse cx="80" cy="192" rx="12" ry="10" fill="#9A6A45"/>
+<ellipse cx="124" cy="180" rx="12" ry="10" fill="#9A6A45"/>
+<circle cx="61" cy="30" r="9" fill="#9A6A45"/>
+<circle cx="139" cy="30" r="9" fill="#9A6A45"/>
+<circle cx="62" cy="31" r="4.5" fill="#E8A48A"/>
+<circle cx="138" cy="31" r="4.5" fill="#E8A48A"/>
+<path fill="#B07D54" d="M 100 20 C 136 20 148 34 148 60 L 148 102 C 148 124 130 134 100 134 C 70 134 52 124 52 102 L 52 60 C 52 34 64 20 100 20 Z"/>
+<rect x="62" y="84" width="76" height="46" rx="23" fill="#9A6A45"/>
+<circle cx="100" cy="17" r="12" fill="#FDB44B"/>
+<ellipse cx="107.5" cy="6" rx="6.5" ry="3.2" transform="rotate(-25 107.5 6)" fill="#8CC56B"/>
+<circle cx="96" cy="13" r="2.8" fill="#FFFFFF" opacity="0.5"/>
+<circle cx="74" cy="60" r="5.5" fill="#293445"/>
+<circle cx="126" cy="60" r="5.5" fill="#293445"/>
+<circle cx="76" cy="58" r="1.8" fill="#FFFFFF"/>
+<circle cx="128" cy="58" r="1.8" fill="#FFFFFF"/>
+<ellipse cx="60" cy="78" rx="7" ry="4.5" fill="#F59E73" opacity="0.5"/>
+<ellipse cx="140" cy="78" rx="7" ry="4.5" fill="#F59E73" opacity="0.5"/>
+<ellipse cx="87" cy="98" rx="3.5" ry="5" fill="#4A3020"/>
+<ellipse cx="113" cy="98" rx="3.5" ry="5" fill="#4A3020"/>
+<path fill="none" stroke="#4A3020" stroke-width="2.5" stroke-linecap="round" d="M 92 116 Q 96 120 100 116 Q 104 120 108 116"/>
+</svg>
